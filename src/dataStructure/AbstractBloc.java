@@ -1,18 +1,16 @@
-package projet;
+package projet.dataStructure;
 
 import java.util.HashSet;
 import java.util.List;
 
-public abstract class AbsractBloc implements Bloc {
-    private String name;
-    private String code;
-    private int credits;
+public abstract class AbstractBloc extends AbstractUnit implements Bloc {
+
+    private final int credits;
     private HashSet<String> coursIds;
     private List<Cours> coursList;
 
-    public AbsractBloc(String name, String code, List<Cours> coursList) {
-        this.name = name;
-        this.code = code;
+    public AbstractBloc(String name, String code, List<Cours> coursList) {
+        super(code,name);
         if (this.isOptional()){
             this.credits = calculOptionalCredits(coursList);
         } else {
@@ -22,29 +20,17 @@ public abstract class AbsractBloc implements Bloc {
         this.coursList=coursList;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
+    public boolean isCours(){return false;}
+
+        public int getCredits() { return credits; }
 
     @Override
-    public String getCode() {
-        return code;
+    public HashSet<String> getCoursIds() { return coursIds;  }
+
+    public Unit[] getChildren() {
+        return coursList.toArray(new Unit[coursList.size()]);
     }
 
-    @Override
-    public int getCredits() {
-        return credits;
-    }
-
-    @Override
-    public HashSet<String> getCoursIds() {
-        return coursIds;
-    }
-
-    public List<Cours> getCoursList() {
-        return coursList;
-    }
 
     private HashSet<String> getCoursIds(List<Cours> coursList) {
         HashSet<String> coursIds = new HashSet<>();
@@ -72,10 +58,4 @@ public abstract class AbsractBloc implements Bloc {
         return defaultCredits;
     }
 
-
-
-    @Override
-    public String toString() {
-        return code + " - " + name ;
-    }
 }

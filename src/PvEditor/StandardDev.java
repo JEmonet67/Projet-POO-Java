@@ -1,11 +1,10 @@
-package projet;
+package projet.PvEditor;
 
 import java.util.List;
 
 public class StandardDev implements Stat {
 
-    public StandardDev() {
-    }
+    public StandardDev() { }
 
     public String getLineName(){
         return "Ecart type";

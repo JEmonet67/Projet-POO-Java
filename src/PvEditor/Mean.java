@@ -1,11 +1,10 @@
-package projet;
+package projet.PvEditor;
 
 import java.util.List;
 
 public class Mean implements Stat{
 
-    public Mean() {
-    }
+    public Mean() { }
 
     public String getLineName() {
         return "Note moyenne";

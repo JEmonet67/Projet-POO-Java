@@ -1,18 +1,17 @@
-package projet;
+package projet.PvEditor;
 
 import java.util.Collections;
 import java.util.List;
 
-public class Max implements Stat{
+public class Min implements Stat {
 
-    public Max() {
-    }
+    public Min() { }
 
     public String getLineName(){
-        return "Note max";
+        return "Note min";
     }
 
     public double calcul(List<Double> list){
-        return Collections.max(list);
+        return Collections.min(list);
     }
 }

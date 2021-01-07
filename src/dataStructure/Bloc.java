@@ -1,8 +1,8 @@
-package projet;
+package projet.dataStructure;
 
 import java.util.HashSet;
 
-public interface Bloc {
+public interface Bloc extends Unit {
     String getCode();
     String getName();
     int getCredits();

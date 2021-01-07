@@ -1,7 +1,4 @@
-package projet;
-
-import projet.Bloc;
-import projet.Program;
+package projet.dataStructure;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +41,8 @@ public class Student implements Comparable<Student>{
     }
 
     private void checkCompatibility(Program program, HashMap<String, Double> grades, String studentId){
-        for (Bloc bloc : program.getBlocs()){
+        for (Unit unit : program.getChildren()){
+            Bloc bloc = (Bloc) unit;
             if (bloc.isOptional()){
                 checkOptionalCompatibility(bloc.getCoursIds(), grades.keySet(), studentId);
             }else{

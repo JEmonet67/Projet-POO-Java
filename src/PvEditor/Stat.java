@@ -1,4 +1,4 @@
-package projet;
+package projet.PvEditor;
 
 import java.util.List;
 

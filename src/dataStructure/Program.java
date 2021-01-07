@@ -1,54 +1,34 @@
-package projet;
+package projet.dataStructure;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Program {
-    private String code;
-    private String name;
+public class Program extends AbstractUnit implements Unit {
     private List<Bloc> blocs;
     private int credits;
-    private List<Student> students;
 
     public Program(String code, String name, List<Bloc> blocs) {
-        this.code = code;
-        this.name = name;
+        super(code, name);
         this.blocs = blocs;
         this.credits=0;
         for (Bloc bloc : blocs){
             this.credits+=bloc.getCredits();
         }
-        this.students = new ArrayList<>(70);
     }
 
-    public String getCode() {
-        return code;
-    }
+    public boolean isCours(){return false;}
 
-    public String getName() {
-        return name;
-    }
-
-    public List<Bloc> getBlocs() {
-        return blocs;
+    public Unit[] getChildren() {
+        return blocs.toArray(new Unit[blocs.size()]);
     }
 
     public int getCredits() {
         return credits;
     }
 
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void addStudent(Student student){
-        students.add(student);
-    }
-
     public double getMoyenne(Student student){
         double sommeNote=0;
         double sommeCoef=0;
-        for (Bloc bloc : getBlocs()){
+        for (Unit bloc : getChildren()){
             double note = bloc.getMoyenne(student);
             if (note >=0 ){
                 sommeNote+=note*bloc.getCredits();
@@ -59,9 +39,4 @@ public class Program {
         return sommeNote/sommeCoef;
     }
 
-
-    @Override
-    public String toString() {
-        return code + " - " + name ;
-    }
 }

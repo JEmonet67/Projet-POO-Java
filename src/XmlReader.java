@@ -4,9 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import projet.CompositBloc;
-import projet.Cours;
-import projet.Program;
+import projet.dataStructure.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,8 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class XmlReader {
+    HashMap<String, Cours> coursMap;
+    HashMap<String, Program> programMap;
+    HashMap<String, Student> studentMap;
 
-    public static ArrayList<HashMap<String, ?>> parseXML(String path){
+
+    public XmlReader(String path){
         try {
             File file = new File(path);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -29,28 +31,17 @@ public class XmlReader {
             // c'est parti pour l'exploration de l'arbre
 
             List<Element> coursElements = getChildren(root, "course");
-            HashMap<String, Cours> coursMap= parseCoursElements(coursElements);
+            this.coursMap= parseCoursElements(coursElements);
 
             List<Element> programElements = getChildren(root, "program");
-            HashMap<String, Program> programMap= parseProgramElements(programElements, coursMap);
+            this.programMap= parseProgramElements(programElements, coursMap);
 
             List<Element> studentElements = getChildren(root, "student");
-            HashMap<String, Student> studentMap= parseStudentElements(studentElements, programMap);
+            this.studentMap= parseStudentElements(studentElements, programMap);
 
-
-            var mapsList = new ArrayList<HashMap<String, ?>>();
-            mapsList.add(coursMap);
-            mapsList.add(programMap);
-            mapsList.add(studentMap);
-            return mapsList;
-
-
-        } catch (Exception e) {
+                    } catch (Exception e) {
             // oups, pas normal
-            return null;
         }
-
-
     }
 
     // Extrait la liste des fils de l'élément item dont le tag est name
@@ -194,4 +185,15 @@ public class XmlReader {
         return studentMap;
     }
 
+    public HashMap<String, Cours> getCoursMap() {
+        return coursMap;
+    }
+
+    public HashMap<String, Program> getProgramMap() {
+        return programMap;
+    }
+
+    public HashMap<String, Student> getStudentMap() {
+        return studentMap;
+    }
 }
