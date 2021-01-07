@@ -7,29 +7,35 @@ import java.io.*;
 import java.util.List;
 
 public class SavePvPanel extends JPanel{
+    //Classe permettant la création du panel contenant le bouton "Enregistrer le procès verbal"
+
     private CentralPanel centralPanel;
-    private JFrame frame;
+    private JFrame fenetrePrincipale;
 
     public SavePvPanel(CentralPanel centralPanel, JFrame frame) {
+        super();
         this.centralPanel = centralPanel;
-        this.frame = frame;
+        this.fenetrePrincipale = frame;
+
+        //ajout du bouton au panel (c'est le seul élément du panel)
         add(getJButton());
     }
 
     private JButton getJButton(){
+        //Création du bouton
         JButton savePvButton = new JButton("Enregistrer le procès verbal");
         savePvButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser selector = new JFileChooser();
-                int res = selector.showDialog(frame,"Enregistrement du procès verbal");
-                if (res==JFileChooser.APPROVE_OPTION){
-                    if (centralPanel.getPv()==null){
-                        JOptionPane.showMessageDialog(null,"Veuillez sélectionner une unitée d'enseignement.");
-                    }else{
+                //actions effectuées lorsqu'on appuie sur le bouton
+                if (centralPanel.getPv()==null){
+                    JOptionPane.showMessageDialog(null,"Veuillez sélectionner une unité d'enseignement.");
+                }else{
+                    //Afficher un JFileChooser et enregistrer le pv a l'adresse sélectionée
+                    JFileChooser selector = new JFileChooser();
+                    int res = selector.showDialog(fenetrePrincipale,"Enregistrement du procès verbal");
+                    if (res==JFileChooser.APPROVE_OPTION){
                         exportPvToCSV(selector.getSelectedFile(),';');
                     }
-
                 }
             }
         });
@@ -37,29 +43,29 @@ public class SavePvPanel extends JPanel{
     }
 
     private boolean exportPvToCSV(File filePath,char sep) {
+        //enregistrement du pv a l'adresse file path
         try {
-
             FileWriter fw = new FileWriter(filePath,false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw =new PrintWriter(bw);
 
-            List<String[]> data = centralPanel.getPv();
+            List<String[]> pv = centralPanel.getPv();
 
-            for (String[] line : data){
+            for (String[] line : pv){
                 for (String elem : line ){
                     pw.print(elem+sep);
                 }
                 pw.println();
             }
 
-
             pw.flush();
             pw.close();
 
-            JOptionPane.showMessageDialog(null,"PV created");
+            JOptionPane.showMessageDialog(null,"Le procès verbal a bien été enregistré.");
             return true;
+
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,"PV not created");
+            JOptionPane.showMessageDialog(null,"Une erreur est survenue. Le procès verbal n'a pas pue être enregistré");
         }
         return false;
     }

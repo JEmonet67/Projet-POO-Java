@@ -6,13 +6,17 @@ import projet.dataStructure.Student;
 import java.util.*;
 
 public class ProcesVerbal {
+    //Classe permettant le calcul du proces verbal d'une unitée d'enseignement
+
     private Unit unit;
+    private HashMap<String,List<Double>> unitsNotes; //stocke toute les notes de chaque unitée d'enseignement (pour permettre les calculs statistiques)
 
     public ProcesVerbal(Unit unit) {
         this.unit = unit;
     }
 
-    private String[] getFirstLine(HashMap<String,List<Double>> unitsNotes){
+    private String[] getFirstLine(){
+        //Crée la première ligne d'un procès verbal (nom des colonnes)
         List<String> line = new ArrayList(50);
         line.add("N°Etudiant");
         line.add("Nom");
@@ -35,55 +39,55 @@ public class ProcesVerbal {
         return line.toArray(new String[line.size()]);
     }
 
-    private String[] studentLine(Student student, HashMap<String,List<Double>> unitsNotes){
+    private void addNote(double note,List<String>line,Unit unit){
+        //ajoute une note a une ligne donnée en argument
+        //ajoute aussi cette note au champ unitNote pour l'unitée d'enseignemnt donnée en paramètre
+
+        if (note < 0) {
+            line.add("ABI");
+        } else {
+            line.add(Double.toString(Math.round(note * 1000.0) / 1000.0));
+            unitsNotes.get(unit.getCode()).add(note);
+        }
+    }
+
+    private String[] studentLine(Student student){
+        //Crée la ligne du procès verbal qui correspond a un étudiant
+
+        //initialisation
         List<String> line = new ArrayList(50);
+
+        //informations de l'étudiant
         line.add(student.getId());
         line.add(student.getSurname());
         line.add(student.getName());
-        double moyenne=unit.getMoyenne(student);
-        if (moyenne < 0) {
-            line.add("ABI");
-        } else {
-            line.add(Double.toString(Math.round(moyenne * 1000.0) / 1000.0));
-            unitsNotes.get(unit.getCode()).add(moyenne);
-        }
 
+        //moyenne de l'étudiant a l'unitée d'enseignement dont le procès verbal est créé
+        double moyenne=unit.getMoyenne(student);
+        addNote(moyenne,line,unit);
+
+        //notes de l'étudiant dans les unitées d'enseignement filles de cette dont le procès verbal est édité
         if (unit.getChildren().length>1) {
             for (Unit child : unit.getChildren()) {
                 if (child.isCours()) {
                     Unit cours = child;
                     if (student.getGrades().containsKey(cours.getCode())) {
                         double coursGrade = student.getGrades().get(cours.getCode());
-                        if (coursGrade < 0) {
-                            line.add("ABI");
-                        } else {
-                            line.add(Double.toString(Math.round(coursGrade * 1000.0) / 1000.0));
-                            unitsNotes.get(cours.getCode()).add(coursGrade);
-                        }
-
+                        addNote(coursGrade,line,cours);
                     } else {
                         line.add(" ");
                     }
                 } else {
+
                     Unit bloc = child;
                     double blocGrade = bloc.getMoyenne(student);
-                    if (blocGrade < 0) {
-                        line.add("ABI");
-                    } else {
-                        line.add(Double.toString(Math.round(blocGrade * 1000.0) / 1000.0));
-                        unitsNotes.get(bloc.getCode()).add(blocGrade);
-                    }
+                    addNote(blocGrade,line,bloc);
+
                     if (bloc.getChildren().length > 1) {
                         for (Unit cours : bloc.getChildren()) {
                             if (student.getGrades().containsKey(cours.getCode())) {
                                 double coursGrade = student.getGrades().get(cours.getCode());
-                                if (coursGrade < 0) {
-                                    line.add("ABI");
-                                } else {
-                                    line.add(Double.toString(Math.round(coursGrade * 1000.0) / 1000.0));
-                                    unitsNotes.get(cours.getCode()).add(coursGrade);
-                                }
-
+                                addNote(coursGrade,line,cours);
                             } else {
                                 line.add(" ");
                             }
@@ -95,7 +99,9 @@ public class ProcesVerbal {
         return line.toArray(new String[line.size()]);
     }
 
-    private String[] statLine(HashMap<String,List<Double>> unitsNotes, Stat stat){
+    private String[] statLine(Stat stat){
+        //Crée une linge statitique du procès verbal
+
         List<String> line = new ArrayList(50);
         line.add(stat.getLineName());
         line.add(" ");
@@ -126,23 +132,27 @@ public class ProcesVerbal {
 
 
     public List<String[]> createPV(){
-        List<Student> students = unit.getStudents();
-        System.out.println("ok");
-        HashMap<String,List<Double>> unitsNotes = new HashMap<>();
+        //initialisation de unitsNotes vide
+        this.unitsNotes = new HashMap<>();
 
+        //initialisation de la variable data qui servira a stocker tout les éléments du "tableau" procès verbal
         List<String[]> data = new ArrayList<>(150);
 
-        data.add(getFirstLine(unitsNotes));
+        //ajout de la ligne d'entête (nom de colones) a data
+        data.add(getFirstLine());
 
-
-        Collections.sort(students);
+        //ajout des lignes correspondants aux étudiants
+        List<Student> students = unit.getStudents();
+        Collections.sort(students); //tri des étudiants par ordre alphabetique
         for (Student student : students){
-            data.add(studentLine(student,unitsNotes));
+            data.add(studentLine(student));
         }
-        data.add(statLine(unitsNotes,new Max()));
-        data.add(statLine(unitsNotes,new Min()));
-        data.add(statLine(unitsNotes,new Mean()));
-        data.add(statLine(unitsNotes,new StandardDev()));
+
+        //ajout des lignes statistiques
+        data.add(statLine(new Max()));
+        data.add(statLine(new Min()));
+        data.add(statLine(new Mean()));
+        data.add(statLine(new StandardDev()));
 
         return data;
     }

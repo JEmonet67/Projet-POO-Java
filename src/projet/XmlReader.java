@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import projet.dataStructure.*;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class XmlReader {
+    //Classe qui permet le parsing de fichier XML
+
     HashMap<String, Cours> coursMap;
     HashMap<String, Program> programMap;
     HashMap<String, Student> studentMap;
@@ -39,8 +42,8 @@ public class XmlReader {
             List<Element> studentElements = getChildren(root, "student");
             this.studentMap= parseStudentElements(studentElements, programMap);
 
-                    } catch (Exception e) {
-            // oups, pas normal
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,"Une erreur est survenue lors de la lecture du fichier de données source.");
         }
     }
 
@@ -61,6 +64,8 @@ public class XmlReader {
     }
 
     private static HashMap<String, Cours> parseCoursElements(List<Element> coursElements){
+        //parse les éléments du XML correspondants aux cours
+        //retourne un Hashmap dont les clées sont les codes des cours et les valeurs des instances de la classe Cours
         HashMap<String, Cours> coursMap= new HashMap<>();
         for (Element elem : coursElements){
             try {
@@ -69,7 +74,7 @@ public class XmlReader {
                 int credits = Integer.parseInt(getChildren(elem,"credits").get(0).getTextContent().strip());
                 coursMap.put(code, new Cours(code,name,credits));
             } catch (Exception e) {
-                // oups, pas normal
+                JOptionPane.showMessageDialog(null,"Le cours suivant n'a pas pue être pris en compte. " + elem.getTextContent());
             }
         }
         return coursMap;
@@ -77,6 +82,9 @@ public class XmlReader {
 
 
     private static HashMap<String, Program> parseProgramElements(List<Element> programElements, HashMap<String, Cours> coursMap ){
+        //parse les éléments du XML correspondants aux programmes
+        //retourne un Hashmap dont les clées sont les codes des programmes et les valeurs des instances de la classe Program
+
         HashMap<String, Program> programMap = new HashMap<>();
         for (Element elem : programElements){
             try {
@@ -90,12 +98,12 @@ public class XmlReader {
                 List<Bloc> blocs = new ArrayList<>();
 
                 addSimpleBlocs(blocs,simpleBlocs,coursMap);
-                addCompositBlocs(blocs,compositBlocs,coursMap);
-                addOptionalBlocs(blocs,optionalBlocs,coursMap);
+                addCompositBlocs(false,blocs,compositBlocs,coursMap);
+                addCompositBlocs(true,blocs,optionalBlocs,coursMap);
 
                 programMap.put(code, new Program(code,name,blocs));
             } catch (Exception e) {
-                // oups, pas normal
+                JOptionPane.showMessageDialog(null,"Le programme suivant n'a pas pue être pris en compte. " + elem.getTextContent());
             }
         }
         return programMap;
@@ -112,7 +120,7 @@ public class XmlReader {
         }
     }
 
-    private static void addCompositBlocs(List<Bloc> blocs, List<Element> compositBlocs, HashMap<String, Cours> coursMap){
+    private static void addCompositBlocs(boolean optional, List<Bloc> blocs, List<Element> compositBlocs, HashMap<String, Cours> coursMap){
         for (Element elem : compositBlocs){
             String code = getChildren(elem, "identifier").get(0).getTextContent().strip();
             String name = getChildren(elem, "name").get(0).getTextContent().strip();
@@ -125,35 +133,31 @@ public class XmlReader {
                 coursList.add(cours);
             }
 
-            blocs.add(new CompositBloc(name,code,coursList));
-        }
-    }
-
-    private static void addOptionalBlocs(List<Bloc> blocs, List<Element> optionalBlocs, HashMap<String, Cours> coursMap){
-        for (Element elem : optionalBlocs){
-            String code = getChildren(elem, "identifier").get(0).getTextContent().strip();
-            String name = getChildren(elem, "name").get(0).getTextContent().strip();
-
-            List<Element> coursIds = getChildren(elem, "item");
-
-            List<Cours> coursList =new ArrayList<>(5);
-            for (Element coursId : coursIds){
-                Cours cours = coursMap.get(coursId.getTextContent().strip());
-                coursList.add(cours);
+            if (optional){
+                blocs.add(new OptionBloc(name,code,coursList));
+            }else{
+                blocs.add(new CompositBloc(name,code,coursList));
             }
 
-            blocs.add(new OptionBloc(name,code,coursList));
         }
     }
 
     private static HashMap<String, Student> parseStudentElements(List<Element> studentsElements, HashMap<String, Program> programMap){
+        //parse les éléments du XML correspondants aux étudiants
+        //retourne un Hashmap dont les clées sont les numéros étudiants et les valeurs des instances de la classe Student
+
         HashMap<String, Student> studentMap = new HashMap<>();
         for (Element elem : studentsElements){
             try {
                 String id = getChildren(elem, "identifier").get(0).getTextContent().strip();
                 String name = getChildren(elem, "name").get(0).getTextContent().strip();
                 String surname = getChildren(elem, "surname").get(0).getTextContent().strip();
-                Program program = programMap.get(getChildren(elem, "program").get(0).getTextContent().strip());
+                Program program = null;
+                try {
+                    program = programMap.get(getChildren(elem, "program").get(0).getTextContent().strip());
+                }catch (Exception e){
+                    JOptionPane.showMessageDialog(null,"L'étudiant " + name + ' ' + surname + " (num étudiant:" + id + ") n'est inscrit a aucun programme.");
+                }
 
                 List<Element> gradesList = getChildren(elem, "grade");
 
@@ -169,7 +173,7 @@ public class XmlReader {
                             value = Double.parseDouble(note);
                         }
                     } catch (Exception e){
-                        System.out.println("La note "+note+ " dans l'UE"+ code +" n'a pas été prise en compte pour l'étudiant numéro"+ id);
+                        JOptionPane.showMessageDialog(null,"La note "+note+ " dans l'UE"+ code +" n'a pas été prise en compte pour l'étudiant numéro"+ id);
                         value = -10.0;
                     }
 
@@ -179,7 +183,7 @@ public class XmlReader {
                 studentMap.put(id, new Student(id,name,surname,program,grades));
 
             } catch (Exception e) {
-                System.out.println(getChildren(elem, "surname").get(0).getTextContent().strip());
+                JOptionPane.showMessageDialog(null,"Le programme suivant n'a pas pue être pris en compte. " + elem.getTextContent());
             }
         }
         return studentMap;

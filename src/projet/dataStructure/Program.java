@@ -3,6 +3,8 @@ package projet.dataStructure;
 import java.util.List;
 
 public class Program extends AbstractUnit implements Unit {
+    //Classe représentant un programme
+
     private List<Bloc> blocs;
     private int credits;
 
@@ -15,7 +17,7 @@ public class Program extends AbstractUnit implements Unit {
         }
     }
 
-    public boolean isCours(){return false;}
+    public boolean isCours(){ return false; }
 
     public Unit[] getChildren() {
         return blocs.toArray(new Unit[blocs.size()]);
@@ -32,7 +34,6 @@ public class Program extends AbstractUnit implements Unit {
             double note = bloc.getMoyenne(student);
             if (note >=0 ){
                 sommeNote+=note*bloc.getCredits();
-                //sommeCoef+=bloc.getCredits();
             }
             sommeCoef+=bloc.getCredits();
         }

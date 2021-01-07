@@ -9,6 +9,8 @@ import java.awt.*;
 import java.util.Collection;
 
 public class TreePanel {
+    //Classe permettant la création du panel contenant l'arborescence des unités d'enseignement
+
     private JPanel jPanel = new JPanel();
     private JTree myTree;
     private Collection<Program> programs;
@@ -21,6 +23,8 @@ public class TreePanel {
     }
 
     private JTree createTree(){
+        //Création de l'arbre et ajout de celui-ci au panel
+
         DefaultMutableTreeNode racine = new DefaultMutableTreeNode();
 
         for (Program program : programs){

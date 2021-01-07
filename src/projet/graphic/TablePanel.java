@@ -10,38 +10,44 @@ import java.awt.*;
 import java.util.List;
 
 public class TablePanel implements TreeSelectionListener {
+    //Classe permettant la création du panel contenant le proces verbal de l'unité selectionée
 
-    private JPanel panel = new JPanel();
+    private JPanel panel;
     private List<String[]> pv;
 
     public TablePanel() {
         super();
-        initialise();
-    }
+        this.panel = new JPanel();
 
-    private void initialise() {
-        pv=null;
-        JLabel initialText = new JLabel("Sélectionnez une unitée d'enseignement");
+        this.pv=null; //avant qu'une unité ait été sélectionnée, aucun pv n'est créé
+        //initialisation du panel sans pv
+        JLabel initialText = new JLabel("Sélectionner une unité d'enseignement");
         panel.add(initialText);
+
     }
 
-    public JPanel getJPanel() {
-        return panel;
-    }
+    public JPanel getJPanel() { return panel; }
+
+    public List<String[]> getPv() { return pv; }
 
     public void valueChanged(TreeSelectionEvent tsl) {
-        if(tsl.getNewLeadSelectionPath() != null){
+        //Ecoute l'arbre dans Tree panel et adapte le pv a l'unité d'enseignement sélectionée dans celui-ci
+
+        if(tsl.getNewLeadSelectionPath() != null){//si une unité a été selectionnée, on change le pv affiché
+
+            //recupération de l'unité correspondant au noeud sélectioné
             UnitNode node = (UnitNode) tsl.getNewLeadSelectionPath().getLastPathComponent();
-            ProcesVerbal pvFactory = new ProcesVerbal(node.getUnit());
-            var pv = pvFactory.createPV();
+
+            //création du nouveau pv
+            ProcesVerbal pvCreator = new ProcesVerbal(node.getUnit());
+            List<String[]> pv = pvCreator.createPV();
             this.pv = pv;
+
+            //Convertion du pv en JTable puis JScrollPane pour permettre son affichage dans l'interface graphique
             JTable jt=createJTable(pv);
-            //pv.setModel(new DefaultTableModel());
-            //pv.repaint(); //??
-            //panel.add(pv);
-            //
             JScrollPane jps = new JScrollPane(jt);
 
+            //Nettoyer le panel des anciens éléments et y ajouter le nouveau JScrollPane contenant le pv
             panel.removeAll();
             panel.repaint();
             panel.revalidate();
@@ -56,6 +62,7 @@ public class TablePanel implements TreeSelectionListener {
 
 
     private static JTable createJTable(List<String[]> pv){
+        //Convertit le procès verbal en JTable (format affichable dans l'interface graphique)
 
         String[] colNames = pv.get(0);
         String[][] lines = new String[pv.size()][pv.get(0).length];
@@ -65,23 +72,15 @@ public class TablePanel implements TreeSelectionListener {
         }
 
         DefaultTableModel tableModel = new DefaultTableModel(lines, colNames) {
-
-            @Override
             public boolean isCellEditable(int row, int column) {
-                //all cells false
+                //rendre les cellules non modifiables
                 return false;
             }
         };
 
         JTable jt = new JTable(lines,colNames);
         jt.setModel(tableModel);
-        //jt.setPreferredScrollableViewportSize(new Dimension(450,63));
-        //jt.setFillsViewportHeight(true);
         jt.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         return jt;
-    }
-
-    public List<String[]> getPv() {
-        return pv;
     }
 }

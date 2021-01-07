@@ -1,6 +1,7 @@
 package projet.dataStructure;
 
 public class Cours extends AbstractUnit implements Unit {
+    //Classe representant un cours
 
     private final int credits;
 
@@ -12,7 +13,7 @@ public class Cours extends AbstractUnit implements Unit {
     public boolean isCours(){return true;}
 
     public Unit[] getChildren(){
-        //return new Unit[]{this};
+        //Un cours n'a pas d'unité d'enseignement fille
         return new Unit[]{};
     }
 
@@ -22,6 +23,7 @@ public class Cours extends AbstractUnit implements Unit {
     }
 
     public double getMoyenne(Student student){
+        //La moyenne d'un étudiant a un cours est sa note a ce cours
         if (student.getGrades().containsKey(getCode())){
             double note = student.getGrades().get(getCode());
             return note;

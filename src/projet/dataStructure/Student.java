@@ -1,9 +1,10 @@
 package projet.dataStructure;
 
-import java.util.Collection;
 import java.util.HashMap;
 
 public class Student implements Comparable<Student>{
+    //Classe représentant un étudiant
+
     private String id;
     private String name;
     private String surname;
@@ -14,10 +15,12 @@ public class Student implements Comparable<Student>{
         this.id = id;
         this.name = name;
         this.surname = surname;
+        this.grades = grades;
         checkCompatibility(program,grades,id);
         this.program = program;
-        this.grades = grades;
-        program.addStudent(this);
+        if (program != null){
+            program.addStudent(this);
+        }
     }
 
     public String getId() {
@@ -41,53 +44,19 @@ public class Student implements Comparable<Student>{
     }
 
     private void checkCompatibility(Program program, HashMap<String, Double> grades, String studentId){
+        //verifie qu'un étudiant rempli les conditions pour être inscrit au programme
         for (Unit unit : program.getChildren()){
             Bloc bloc = (Bloc) unit;
-            if (bloc.isOptional()){
-                checkOptionalCompatibility(bloc.getCoursIds(), grades.keySet(), studentId);
-            }else{
-                checkUnoptionalCompatibility(bloc.getCoursIds(), grades.keySet(), studentId);
-            }
-        }
-    }
-
-
-    private void checkOptionalCompatibility(Collection<String> blocIds, Collection<String> gradesIds, String studentId){
-        int compt = 0;
-        for (String id: blocIds){
-            if (gradesIds.contains(id)){
-                compt +=1 ;
-            }
-        }
-        if (compt < 1){
-            System.out.println("option exeption " + studentId);
-            throw new IllegalArgumentException("L'étudiant "+studentId+" ne remplie pas les conditions d'inscription a son programme");
-        }
-    }
-
-    private void checkUnoptionalCompatibility(Collection<String> blocIds, Collection<String> gradesIds, String studentId){
-        if (! gradesIds.containsAll(blocIds)){
-            System.out.println("Unoptional exeption" + studentId);
-            throw new IllegalArgumentException("L'étudiant "+studentId+" ne remplie pas les conditions d'inscription a son programme");
+            bloc.checkCompatibility(this);
         }
     }
 
     public int compareTo(Student student){
-        if (student.getSurname().compareTo(this.getSurname())>0){
-            return -1;
-        } else if (student.getSurname().compareTo(this.getSurname())<0){
-            return 1;
-        }
-        return 0;
+        return (-1 * student.getSurname().compareTo(this.getSurname())) ;
     }
 
 
-    @Override
     public String toString() {
-        return "Student : " +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", program=" +program.getName();
+        return id + " - " +surname+' '+ name ;
     }
 }
