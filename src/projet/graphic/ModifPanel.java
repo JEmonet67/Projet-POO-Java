@@ -7,28 +7,34 @@ import java.awt.event.ActionListener;
 
 public class ModifPanel extends JPanel {
 
-    public ModifPanel() {
-        JPanel topPanel = new JPanel();
-        JPanel numberModifPanel = new NumberModifPanel();
-        JPanel botPanel = new JPanel();
+    public void modifCourseDisplay() {
+        removeAll();
+        repaint();
+        revalidate();
 
-        topPanel.add(new JLabel("Choisissez ce que vous voulez ajouter et son nombre"));
-        JTextField tfSupprEtudiant = new JTextField("Identifiant");
-        botPanel.add(new JLabel("Choisissez un étudiant à supprimer"));
-        botPanel.add(Box.createHorizontalStrut(50));
-        botPanel.add(tfSupprEtudiant);
-        botPanel.add(getSupprStudentButton());
-        botPanel.setLayout(new GridLayout(2,2));
+        JTextField tfCode = new JTextField("Code UE",10);
+        JTextField tfName = new JTextField("Nom",10);
+        JTextField tfCredits = new JTextField("Crédits",10);
+        add(new JLabel("Entrer les informations sur le cours à ajouter :"));
+        add(tfCode);
+        add(tfName);
+        add(tfCredits);
 
-        add(topPanel, BorderLayout.NORTH);
-        add(numberModifPanel, BorderLayout.CENTER);
-        add(botPanel, BorderLayout.SOUTH);
+        setBorder(BorderFactory.createEmptyBorder(10, 50, 10, 50));
+        setLayout(new GridLayout(5, 1));
+        revalidate();
+        repaint();
     }
 
-    private JButton getSupprStudentButton() {
-        JButton getSupprStudentButton = new JButton("Supprimer");
+    public void modifBlocDisplay() {
 
-        return getSupprStudentButton;
+    }
+
+    public void modifStudentDisplay() {
+
+    }
+
+    public void modifProgrammDisplay() {
 
     }
 }

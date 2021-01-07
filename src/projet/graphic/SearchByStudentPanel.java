@@ -39,7 +39,7 @@ public class SearchByStudentPanel extends JPanel {
                 modificationFrame.setLayout(new BorderLayout());
                 modificationFrame.setSize(1000,600);
 
-                JPanel modifPanel = new ModifPanel();
+                ModifPanel modifPanel = new ModifPanel();
                 modificationFrame.add(modifPanel,BorderLayout.CENTER);
                 JPanel choicesModifPanel = new ChoicesModifPanel(modifPanel);
                 modificationFrame.add(choicesModifPanel,BorderLayout.NORTH);

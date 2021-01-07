@@ -8,12 +8,10 @@ import java.util.List;
 import java.awt.*;
 
 public class ChoicesModifPanel extends JPanel {
-    JPanel modifPanel;
-    JFrame frame;
+    ModifPanel modifPanel;
 
-    public ChoicesModifPanel(JPanel modifPanel) {
+    public ChoicesModifPanel(ModifPanel modifPanel) {
         this.modifPanel = modifPanel;
-        this.frame = frame;
         add(getAddStudentButton());
         add(getSupprStudentButton());
         add(getAddCourseButton());
@@ -24,12 +22,22 @@ public class ChoicesModifPanel extends JPanel {
 
     private JButton getAddStudentButton() {
         JButton getAddStudentButton = new JButton("Ajouter un étudiant");
+        getAddStudentButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getNumberFrame("cours");
+            }
+        });
 
         return getAddStudentButton;
     }
 
     private JButton getSupprStudentButton() {
         JButton getSupprStudentButton = new JButton("Supprimer un étudiant");
+        getSupprStudentButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         return getSupprStudentButton;
     }
@@ -38,15 +46,7 @@ public class ChoicesModifPanel extends JPanel {
         JButton getAddCourseButton = new JButton("Ajouter un cours");
         getAddCourseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ModifCoursePanel modifCoursePanel = new ModifCoursePanel();
-                modifPanel.removeAll();
-                modifPanel.repaint();
-                modifPanel.revalidate();
-                modifPanel.add(modifCoursePanel);
-                setBorder(BorderFactory.createEmptyBorder(10, 50, 10, 50));
-                setLayout(new GridLayout(5, 1));
-                modifPanel.revalidate();
-                modifPanel.repaint();
+                getNumberFrame("cours");
             }
         });
 
@@ -57,7 +57,7 @@ public class ChoicesModifPanel extends JPanel {
         JButton getAddBlocButton = new JButton("Ajouter un bloc");
         getAddBlocButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFrame numberBlocs = getNumberFrame("blocs");
+                getNumberFrame("blocs");
             }
         });
 
@@ -66,7 +66,11 @@ public class ChoicesModifPanel extends JPanel {
 
     private JButton getAddProgramButton() {
         JButton getAddProgramButton = new JButton("Ajouter un programme");
-
+        getAddProgramButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getNumberFrame("programme");
+            }
+        });
         return getAddProgramButton;
     }
 
@@ -81,7 +85,7 @@ public class ChoicesModifPanel extends JPanel {
         panelNumber.add(new JLabel("Nombre à ajouter"));
         JTextField tfNumber = new JTextField("1", 5);
         panelNumber.add(tfNumber);
-        panelNumber.add(getAddNumberButton(tfNumber, type));
+        panelNumber.add(getAddNumberButton(tfNumber, type, numberFrame));
         numberFrame.add(panelNumber, BorderLayout.CENTER);
 
         numberFrame.setVisible(true);
@@ -89,14 +93,24 @@ public class ChoicesModifPanel extends JPanel {
         return numberFrame;
     }
 
-    private JButton getAddNumberButton(JTextField tf,String type) { ;
+    private JButton getAddNumberButton(JTextField tf,String type, JFrame frame) { ;
         Integer number = Integer.parseInt(tf.getText().strip());
 
         JButton getAddNumberButton = new JButton("Valider");
         getAddNumberButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (type == "bloc") {
-
+                    //modifPanel.modifBlocDisplay();
+                }
+                else if (type == "cours") {
+                    modifPanel.modifCourseDisplay();
+                    frame.dispose();
+                }
+                else if (type == "programme") {
+                    //modifPanel.modifProgrammDisplay();
+                }
+                else if (type == "étudiant") {
+                    //modifPanel.modifStudentDisplay();
                 }
             }
         });
