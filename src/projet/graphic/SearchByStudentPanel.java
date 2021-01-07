@@ -23,6 +23,29 @@ public class SearchByStudentPanel extends JPanel {
         add(new JLabel("Afficher les notes d'un étudiant:"));
         add(tf);
         add(createRecherchButton(tf));
+        add(createModificationButton());
+    }
+
+    private JButton createModificationButton(){
+        JButton modifButton = new JButton("Modifier la base de données");
+        modifButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFrame modificationFrame = new JFrame();
+            modificationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            modificationFrame.setTitle("Modification de la base de données");
+            modificationFrame.setLayout(new BorderLayout());
+            modificationFrame.setSize(1000,600);
+
+            JPanel choicesModifPanel = new ChoicesModifPanel();
+            modificationFrame.add(choicesModifPanel,BorderLayout.NORTH);
+            JPanel modifPanel = new ModifPanel();
+            modificationFrame.add(modifPanel,BorderLayout.CENTER);
+
+            modificationFrame.setVisible(true);
+        }
+        });
+        return modifButton;
     }
 
     private JButton createRecherchButton(JTextField tf){

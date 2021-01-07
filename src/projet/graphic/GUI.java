@@ -35,5 +35,6 @@ public class GUI extends JFrame {
 
         JPanel searchStudent = new SearchByStudentPanel(studentMap,coursMap);
         add(searchStudent,BorderLayout.NORTH);
+
     }
 }
