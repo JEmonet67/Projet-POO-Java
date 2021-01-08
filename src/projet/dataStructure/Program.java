@@ -1,6 +1,6 @@
 package projet.dataStructure;
 
-import java.util.List;
+import java.util.*;
 
 public class Program extends AbstractUnit implements Unit {
     //Classe représentant un programme
@@ -25,6 +25,18 @@ public class Program extends AbstractUnit implements Unit {
 
     public int getCredits() {
         return credits;
+    }
+
+    public void addBloc(Bloc bloc){
+        this.blocs.add(bloc);
+        this.credits += bloc.getCredits();
+    }
+
+    public void addCours(Cours cours){
+        List<Cours> coursList= new ArrayList<>();
+        coursList.add(cours);
+        this.blocs.add(new CompositBloc(cours.getName(), cours.getCode(),coursList));
+        this.credits+=cours.getCredits();
     }
 
     public double getMoyenne(Student student){

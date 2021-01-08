@@ -1,5 +1,6 @@
 package projet.dataStructure;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,12 @@ public class OptionBloc extends AbstractBloc {
         super(name, code, coursList);
     }
 
-    //public boolean isOptional(){return true;}
+    public void checkCoursAddition(Cours cours){
+        if (cours.getCredits() != this.getCredits()){
+            JOptionPane.showMessageDialog(null,"Le crédit du cours " +cours.toString() + "ne correspond pas a celui du bloc a option " + this.toString()+ ". Il ne peut donc pas être ajouté a ce bloc.");
+            throw new IllegalArgumentException("Le crédit du cours " +cours.toString() + "ne correspond pas a celui du bloc a option " + this.toString()+ ". Il ne peut donc pas être ajouté a ce bloc.");
+        }
+    }
 
     public int calculCredits() {
         int defaultCredits = getChildren()[0].getCredits();

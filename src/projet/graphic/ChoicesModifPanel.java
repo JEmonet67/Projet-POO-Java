@@ -4,14 +4,19 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.awt.*;
+import projet.dataStructure.Student;
 
 public class ChoicesModifPanel extends JPanel {
     ModifPanel modifPanel;
+    HashMap<String,Student> studentMap;
 
-    public ChoicesModifPanel(ModifPanel modifPanel) {
+    public ChoicesModifPanel(ModifPanel modifPanel,
+                             GUI gui) {
         this.modifPanel = modifPanel;
+        this.studentMap = gui.getStudentMap();
         add(getAddStudentButton());
         add(getSupprStudentButton());
         add(getAddCourseButton());
@@ -21,100 +26,57 @@ public class ChoicesModifPanel extends JPanel {
 
 
     private JButton getAddStudentButton() {
-        JButton getAddStudentButton = new JButton("Ajouter un étudiant");
-        getAddStudentButton.addActionListener(new ActionListener() {
+        JButton addStudentButton = new JButton("Ajouter un étudiant");
+        addStudentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getNumberFrame("cours");
+
             }
         });
 
-        return getAddStudentButton;
+        return addStudentButton;
     }
 
     private JButton getSupprStudentButton() {
-        JButton getSupprStudentButton = new JButton("Supprimer un étudiant");
-        getSupprStudentButton.addActionListener(new ActionListener() {
+        JButton supprStudentButton = new JButton("Supprimer un étudiant");
+        supprStudentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                new InputIDFrame("Suppression étudiant",modifPanel);
             }
         });
 
-        return getSupprStudentButton;
+        return supprStudentButton;
     }
 
     private JButton getAddCourseButton() {
-        JButton getAddCourseButton = new JButton("Ajouter un cours");
-        getAddCourseButton.addActionListener(new ActionListener() {
+        JButton addCourseButton = new JButton("Ajouter un cours");
+        addCourseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getNumberFrame("cours");
+                new CourseModifDisplay("Nombre de cours à ajouter", modifPanel);
             }
         });
 
-        return getAddCourseButton;
+        return addCourseButton;
     }
 
     private JButton getAddBlocButton() {
-        JButton getAddBlocButton = new JButton("Ajouter un bloc");
-        getAddBlocButton.addActionListener(new ActionListener() {
+        JButton addBlocButton = new JButton("Ajouter un bloc");
+        addBlocButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getNumberFrame("blocs");
+                new BlocModifDisplay("Nombre de cours du bloc", modifPanel);
             }
-        });
+            });
 
-        return getAddBlocButton;
+        return addBlocButton;
     }
 
     private JButton getAddProgramButton() {
-        JButton getAddProgramButton = new JButton("Ajouter un programme");
-        getAddProgramButton.addActionListener(new ActionListener() {
+        JButton addProgramButton = new JButton("Ajouter un programme");
+        addProgramButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getNumberFrame("programme");
-            }
-        });
-        return getAddProgramButton;
-    }
-
-    private JFrame getNumberFrame(String type) {
-        JFrame numberFrame = new JFrame();
-        numberFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        numberFrame.setLayout(new BorderLayout());
-        numberFrame.setTitle("Ajout de " + type);
-        numberFrame.setSize(300, 75);
-
-        JPanel panelNumber = new JPanel();
-        panelNumber.add(new JLabel("Nombre à ajouter"));
-        JTextField tfNumber = new JTextField("1", 5);
-        panelNumber.add(tfNumber);
-        panelNumber.add(getAddNumberButton(tfNumber, type, numberFrame));
-        numberFrame.add(panelNumber, BorderLayout.CENTER);
-
-        numberFrame.setVisible(true);
-
-        return numberFrame;
-    }
-
-    private JButton getAddNumberButton(JTextField tf,String type, JFrame frame) { ;
-        Integer number = Integer.parseInt(tf.getText().strip());
-
-        JButton getAddNumberButton = new JButton("Valider");
-        getAddNumberButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (type == "bloc") {
-                    //modifPanel.modifBlocDisplay();
-                }
-                else if (type == "cours") {
-                    modifPanel.modifCourseDisplay();
-                    frame.dispose();
-                }
-                else if (type == "programme") {
-                    //modifPanel.modifProgrammDisplay();
-                }
-                else if (type == "étudiant") {
-                    //modifPanel.modifStudentDisplay();
-                }
+                new ProgramModifDisplay("Nombre de blocs du programme",modifPanel);
             }
         });
 
-        return getAddNumberButton;
+        return addProgramButton;
     }
 }

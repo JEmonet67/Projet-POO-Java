@@ -1,5 +1,6 @@
 package projet.dataStructure;
 
+import javax.swing.*;
 import java.util.List;
 
 public class CompositBloc extends AbstractBloc {
@@ -17,7 +18,11 @@ public class CompositBloc extends AbstractBloc {
         return defaultCredits;
     }
 
-    //public boolean isOptional(){return false;}
+    public void checkCoursAddition(Cours cours){
+        JOptionPane.showMessageDialog(null,"Aucun cours ne peut être ajouté a un bloc composite.");
+        throw new IllegalArgumentException("Aucun cours ne peut être ajouté a un bloc composite.");
+    }
+
 
     public double getMoyenne(Student student){
         double note;

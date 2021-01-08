@@ -55,7 +55,31 @@ public class GUI extends JFrame {
     }
 
     public void addSearchStudentPanel(){
-        JPanel searchStudent = new SearchByStudentPanel(studentMap,coursMap);
+        JPanel searchStudent = new SearchByStudentPanel(this);
         add(searchStudent,BorderLayout.NORTH);
+    }
+
+    public HashMap<String, Program> getProgramsMap() {
+        return programsMap;
+    }
+
+    public HashMap<String, Student> getStudentMap() {
+        return studentMap;
+    }
+
+    public HashMap<String, Cours> getCoursMap() {
+        return coursMap;
+    }
+
+    public void setProgramsMap(HashMap<String, Program> programsMap) {
+        this.programsMap = programsMap;
+    }
+
+    public void setStudentMap(HashMap<String, Student> studentMap) {
+        this.studentMap = studentMap;
+    }
+
+    public void setCoursMap(HashMap<String, Cours> coursMap) {
+        this.coursMap = coursMap;
     }
 }

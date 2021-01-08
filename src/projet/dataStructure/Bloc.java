@@ -8,7 +8,7 @@ public interface Bloc extends Unit {
     String getCode();
     String getName();
     int getCredits();
-    //boolean isOptional();
+    void addCours(Cours cours);
     int calculCredits();
     HashSet<String> getCoursIds();
     double getMoyenne(Student student);
